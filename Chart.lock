@@ -1,6 +1,6 @@
 dependencies:
 - name: postgres-db
   repository: file://../components/postgres-db
-  version: 0.1.0
-digest: sha256:aaf33fde9d8a58cb04dc9f2f46509d63cec16bc0fabd528b7088df02e91ad87c
-generated: "2026-10-14T02:05:32.4849031+07:00"
+  version: 0.2.0
+digest: sha256:95921d33482ad87be65b4e77a8259202a064ac5f8cd5b51b8d9ccb90973af3a4
+generated: "2026-10-14T02:11:02.5626727+07:00"

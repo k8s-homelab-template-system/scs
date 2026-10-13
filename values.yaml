@@ -1,8 +1,7 @@
 postgres-db:
   enabled: true
   # Ghi đè values của components/postgres-db ở đây, ví dụ:
-  # cluster:
-  #   cluster:
-  #     instances: 3
-  #     storage:
+  # postgresql:
+  #   primary:
+  #     persistence:
   #       size: 20Gi

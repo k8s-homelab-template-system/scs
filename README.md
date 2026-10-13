@@ -4,21 +4,9 @@ Umbrella chart, cài toàn bộ component của k8s-homelab-template-system bằ
 
 | Component | Chart | Bật/tắt |
 | --- | --- | --- |
-| PostgreSQL | [`components/postgres-db`](../components/postgres-db) | `postgres-db.enabled` |
+| PostgreSQL | [`components/postgres-db`](../components/postgres-db) (wrap `bitnami/postgresql`) | `postgres-db.enabled` |
 
 Các component được tham chiếu bằng đường dẫn `file://../components/...`, nên phải chạy chart này từ trong repo `root` (clone kèm `--recurse-submodules`).
-
-## Yêu cầu
-
-Cài operator CloudNativePG một lần cho cả cluster:
-
-```bash
-helm repo add cnpg https://cloudnative-pg.github.io/charts
-helm upgrade --install cnpg cnpg/cloudnative-pg --version 0.29.1 \
-  --namespace cnpg-system --create-namespace
-```
-
-Operator được cài riêng, không đưa vào umbrella chart, vì CRD `Cluster` phải có trước khi Helm tạo resource `Cluster`.
 
 ## Cài đặt
 
@@ -34,7 +22,8 @@ Ghi đè cấu hình trong [values.yaml](values.yaml) theo dạng `<component>.<
 
 ```yaml
 postgres-db:
-  cluster:
-    cluster:
-      instances: 3
+  postgresql:
+    primary:
+      persistence:
+        size: 20Gi
 ```
