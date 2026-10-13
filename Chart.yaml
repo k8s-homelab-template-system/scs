@@ -1,0 +1,12 @@
+apiVersion: v2
+name: scs
+description: Umbrella chart gom các component của k8s-homelab-template-system
+type: application
+version: 0.1.0
+
+dependencies:
+  # Đường dẫn file:// chỉ dùng được khi scs nằm trong repo root (cạnh thư mục components/).
+  - name: postgres-db
+    version: 0.1.0
+    repository: file://../components/postgres-db
+    condition: postgres-db.enabled
