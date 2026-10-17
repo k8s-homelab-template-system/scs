@@ -5,8 +5,7 @@ type: application
 version: 0.2.0
 
 dependencies:
-  # Đường dẫn file:// chỉ dùng được khi scs nằm trong repo root (cạnh thư mục components/).
   - name: postgres-db
     version: 0.2.0
-    repository: file://../components/postgres-db
+    repository: oci://ghcr.io/k8s-homelab-template-system/charts/postgres-db
     condition: postgres-db.enabled
