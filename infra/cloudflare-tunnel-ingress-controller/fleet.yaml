@@ -1,0 +1,19 @@
+# Cloudflare Tunnel Ingress Controller (https://github.com/STRRL/cloudflare-tunnel-ingress-controller).
+# Mỗi Ingress có ingressClassName: cloudflare-tunnel được tự thêm route vào tunnel và tự tạo
+# DNS CNAME trên Cloudflare. Controller tự chạy cloudflared, traffic đi thẳng vào Service.
+#
+# Credential nằm trong Secret cloudflare-api (tạo tay, không commit), xem README của scs.
+defaultNamespace: cloudflare-tunnel-ingress-controller
+
+helm:
+  releaseName: cloudflare-tunnel-ingress-controller
+  repo: https://helm.strrl.dev
+  chart: cloudflare-tunnel-ingress-controller
+  version: 0.1.0
+  values:
+    cloudflare:
+      secretRef:
+        name: cloudflare-api
+        apiTokenKey: api-token
+        accountIDKey: cloudflare-account-id
+        tunnelNameKey: cloudflare-tunnel-name

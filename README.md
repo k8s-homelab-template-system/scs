@@ -14,12 +14,22 @@ Ghi đè cấu hình trong [values.yaml](values.yaml) theo dạng `<component>.<
 | --- | --- | --- |
 | `rabbitmq-mgm.vodka.bid` | rabbitmq | management UI (port 15672) |
 
-Cloudflare Tunnel dùng wildcard nên thêm component không cần khai báo gì trên Cloudflare, chỉ cần Ingress có host `<subdomain>.vodka.bid`:
+## Public qua Cloudflare Tunnel
 
-- Tunnel → Public Hostname: `*.vodka.bid` → `HTTP` → ingress controller của cluster (port 80)
-- DNS: CNAME `*` → `<tunnel-id>.cfargotunnel.com` (proxied)
+[Cloudflare Tunnel Ingress Controller](https://github.com/STRRL/cloudflare-tunnel-ingress-controller) chạy ở bundle Fleet riêng [infra/cloudflare-tunnel-ingress-controller](infra/cloudflare-tunnel-ingress-controller/fleet.yaml). Mỗi Ingress có `ingressClassName: cloudflare-tunnel` được controller tự thêm route vào tunnel và tự tạo DNS CNAME, không cần khai báo gì trên Cloudflare. Traffic đi thẳng từ tunnel vào Service, Cloudflare lo TLS (Universal SSL chỉ phủ 1 cấp subdomain).
 
-Cloudflare lo TLS (Universal SSL phủ `*.vodka.bid`, chỉ 1 cấp subdomain), Ingress chỉ cần HTTP. Host không khớp Ingress nào sẽ nhận 404 từ ingress controller.
+Cài lần đầu: tạo API token tại Cloudflare → My Profile → API Tokens với quyền `Zone:Zone:Read`, `Zone:DNS:Edit`, `Account:Cloudflare Tunnel:Edit`, rồi tạo Secret (không commit):
+
+```bash
+kubectl create namespace cloudflare-tunnel-ingress-controller
+read -s CF_API_TOKEN
+kubectl -n cloudflare-tunnel-ingress-controller create secret generic cloudflare-api \
+  --from-literal=api-token="$CF_API_TOKEN" \
+  --from-literal=cloudflare-account-id=<account-id> \
+  --from-literal=cloudflare-tunnel-name=homelab
+```
+
+Tunnel `homelab` được controller tự tạo nếu chưa có.
 
 ## Luồng CD
 
