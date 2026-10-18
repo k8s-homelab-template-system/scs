@@ -2,5 +2,8 @@ dependencies:
 - name: postgres-db
   repository: oci://ghcr.io/k8s-homelab-template-system/charts
   version: 0.3.1
-digest: sha256:56f349a0f18c2a7e7ac9a3ff0ce89cbc83edfc21601ae44910a6344a9b07f8bd
-generated: "2026-10-18T05:47:27.928435402Z"
+- name: rabbitmq
+  repository: oci://ghcr.io/k8s-homelab-template-system/charts
+  version: 0.1.1
+digest: sha256:44481da3d9ec829d715c63cf8f44ce7288526fb667e0aa747e18d88355347573
+generated: "2026-10-18T05:51:38.190600181Z"
