@@ -1,41 +1,31 @@
 # scs
 
-Cài các component của k8s-homelab-template-system bằng Rancher Fleet. Mỗi thư mục là một bundle, Fleet kéo chart trực tiếp từ `ghcr.io` (package private).
+Umbrella chart gom các component của k8s-homelab-template-system, deploy bằng Rancher Fleet.
 
-| Component | Chart | Cấu hình |
+| Component | Chart | Bật/tắt |
 | --- | --- | --- |
-| PostgreSQL | `oci://ghcr.io/k8s-homelab-template-system/charts/postgres-db` (wrap `bitnami/postgresql`) | [postgres-db/fleet.yaml](postgres-db/fleet.yaml) |
+| PostgreSQL | `oci://ghcr.io/k8s-homelab-template-system/charts/postgres-db` (wrap `bitnami/postgresql`) | `postgres-db.enabled` |
 
-Thêm component mới: tạo thư mục `<component>/fleet.yaml` với `helm.chart` trỏ tới `oci://ghcr.io/k8s-homelab-template-system/charts/<component>`.
+Ghi đè cấu hình trong [values.yaml](values.yaml) theo dạng `<component>.<key>`.
 
-## Xác thực ghcr.io
+## Luồng CD
 
-Tạo Secret chứa PAT có scope `read:packages` trong namespace của GitRepo:
+1. Push `components/<name>` → workflow `helm-release` publish chart lên ghcr.io (private) và sửa `version` của dependency trong [Chart.yaml](Chart.yaml).
+2. Push `Chart.yaml` → workflow [vendor-charts](.github/workflows/vendor-charts.yaml) chạy `helm dependency update` và commit `Chart.lock` + `charts/*.tgz`.
+3. Fleet deploy chart ở thư mục gốc với `helm.disableDependencyUpdate: true` ([fleet.yaml](fleet.yaml)), dùng `charts/*.tgz` đã commit nên không cần đăng nhập ghcr.io.
 
-```bash
-read -s GHCR_PAT
-kubectl -n fleet-default create secret generic ghcr-helm-auth \
-  --type=kubernetes.io/basic-auth \
-  --from-literal=username=<github-user> \
-  --from-literal=password="$GHCR_PAT"
-```
+Không để Fleet tự tải dependency: Fleet không dùng `helmSecretName` cho bước `helm dependency update`, chart private sẽ lỗi 401.
 
-GitRepo:
+## Thêm component
 
-```yaml
-spec:
-  repo: https://github.com/k8s-homelab-template-system/scs.git
-  branch: main
-  helmSecretName: ghcr-helm-auth
-  helmRepoURLRegex: ghcr.io/k8s-homelab-template-system/.*
-```
-
-Không dùng umbrella chart (`dependencies:` trong `Chart.yaml`): Fleet không truyền `helmSecretName` cho bước `helm dependency update`, nên chart con private sẽ lỗi 401.
+1. Publish chart từ `components/<name>`.
+2. Package `charts/<name>` → Package settings → Manage Actions access → thêm repo `scs` với role **Read**.
+3. Thêm vào `dependencies` trong `Chart.yaml` và `<name>.enabled` trong `values.yaml`, rồi push.
 
 ## Cài thủ công bằng helm
 
 ```bash
 helm registry login ghcr.io -u <github-user>
-helm upgrade --install postgres-db oci://ghcr.io/k8s-homelab-template-system/charts/postgres-db \
-  --version 0.2.0 --namespace homelab --create-namespace
+helm dependency update scs
+helm upgrade --install scs scs --namespace homelab --create-namespace
 ```
