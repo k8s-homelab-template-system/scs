@@ -5,6 +5,8 @@ Umbrella chart gom các component của k8s-homelab-template-system, deploy bằ
 | Component | Chart | Bật/tắt |
 | --- | --- | --- |
 | PostgreSQL | `oci://ghcr.io/k8s-homelab-template-system/charts/postgres-db` (wrap `bitnami/postgresql`) | `postgres-db.enabled` |
+| MongoDB | `oci://ghcr.io/k8s-homelab-template-system/charts/mongo-db` (wrap `bitnami/mongodb`) | `mongo-db.enabled` |
+| RabbitMQ | `oci://ghcr.io/k8s-homelab-template-system/charts/rabbitmq` (wrap `bitnami/rabbitmq`) | `rabbitmq.enabled` |
 
 Ghi đè cấu hình trong [values.yaml](values.yaml) theo dạng `<component>.<key>`.
 

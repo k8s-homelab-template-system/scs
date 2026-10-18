@@ -12,6 +12,13 @@ postgres-db:
   #     persistence:
   #       size: 20Gi
 
+mongo-db:
+  enabled: true
+  # Ghi đè values của components/mongo-db ở đây, ví dụ:
+  # mongodb:
+  #   persistence:
+  #     size: 20Gi
+
 rabbitmq:
   enabled: true
   rabbitmq:
