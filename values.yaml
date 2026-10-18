@@ -1,3 +1,8 @@
+global:
+  # Domain gốc dùng chung cho Ingress của mọi component: host = <subdomain>.<baseDomain>.
+  # Public hostname tương ứng tạo trên Cloudflare Tunnel, trỏ về ingress controller.
+  baseDomain: vodka.bid
+
 postgres-db:
   enabled: true
   # Ghi đè values của components/postgres-db ở đây, ví dụ:
@@ -9,10 +14,7 @@ postgres-db:
 rabbitmq:
   enabled: true
   rabbitmq:
-    # Management UI qua Cloudflare Tunnel: public hostname rabbitmq-mgm.<domain>
-    # trỏ về http://traefik.kube-system.svc.cluster.local:80. Cloudflare lo TLS,
-    # nên Ingress chỉ cần HTTP. Domain: vodka.bid.
+    # Management UI: rabbitmq-mgm.<global.baseDomain>, qua Cloudflare Tunnel (Cloudflare lo TLS).
     ingress:
       enabled: true
-      hostname: rabbitmq-mgm.vodka.bid
-      tls: false
+      # subdomain: rabbitmq-mgm   # mặc định của component

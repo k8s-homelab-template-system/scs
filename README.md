@@ -8,6 +8,14 @@ Umbrella chart gom các component của k8s-homelab-template-system, deploy bằ
 
 Ghi đè cấu hình trong [values.yaml](values.yaml) theo dạng `<component>.<key>`.
 
+`global.baseDomain` (hiện là `vodka.bid`) là domain gốc dùng chung: mỗi component chỉ khai báo `ingress.subdomain`, host thành `<subdomain>.<baseDomain>`. Chart con chỉ đọc được `global.*` của chart cha, nên biến này phải nằm trong `global`.
+
+| Host | Component | Trỏ tới |
+| --- | --- | --- |
+| `rabbitmq-mgm.vodka.bid` | rabbitmq | management UI (port 15672) |
+
+Mỗi host cần một public hostname trên Cloudflare Tunnel trỏ về ingress controller của cluster.
+
 ## Luồng CD
 
 1. Push `components/<name>` → workflow `helm-release` publish chart lên ghcr.io (private) và sửa `version` của dependency trong [Chart.yaml](Chart.yaml).
