@@ -14,7 +14,12 @@ Ghi đè cấu hình trong [values.yaml](values.yaml) theo dạng `<component>.<
 | --- | --- | --- |
 | `rabbitmq-mgm.vodka.bid` | rabbitmq | management UI (port 15672) |
 
-Mỗi host cần một public hostname trên Cloudflare Tunnel trỏ về ingress controller của cluster.
+Cloudflare Tunnel dùng wildcard nên thêm component không cần khai báo gì trên Cloudflare, chỉ cần Ingress có host `<subdomain>.vodka.bid`:
+
+- Tunnel → Public Hostname: `*.vodka.bid` → `HTTP` → ingress controller của cluster (port 80)
+- DNS: CNAME `*` → `<tunnel-id>.cfargotunnel.com` (proxied)
+
+Cloudflare lo TLS (Universal SSL phủ `*.vodka.bid`, chỉ 1 cấp subdomain), Ingress chỉ cần HTTP. Host không khớp Ingress nào sẽ nhận 404 từ ingress controller.
 
 ## Luồng CD
 
