@@ -14,10 +14,10 @@ infisical-standalone:
         memory: 512Mi
       limits:
         memory: 1Gi
+  # Ingress của chart có path /ss-webhook kiểu Exact, Cloudflare Tunnel Ingress Controller
+  # không hỗ trợ nên bỏ qua cả Ingress. Dùng templates/ingress.yaml thay thế.
   ingress:
-    enabled: true
-    hostName: infisical.vodka.bid
-    ingressClassName: cloudflare-tunnel
+    enabled: false
     nginx:
       enabled: false
   postgresql:
@@ -70,3 +70,8 @@ redis:
         memory: 64Mi
       limits:
         memory: 256Mi
+
+# templates/ingress.yaml: public qua Cloudflare Tunnel (tunnel k3s-home).
+ingress:
+  hostName: infisical.vodka.bid
+  ingressClassName: cloudflare-tunnel

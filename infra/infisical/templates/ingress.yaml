@@ -1,0 +1,26 @@
+{{- /*
+Thay cho Ingress của chart infisical-standalone: chỉ dùng pathType Prefix vì Cloudflare Tunnel
+Ingress Controller không hỗ trợ Exact. Path / đã bao gồm /ss-webhook.
+*/ -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: infisical
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: infisical
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  rules:
+    - host: {{ .Values.ingress.hostName }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ index .Values "infisical-standalone" "infisical" "fullnameOverride" }}
+                port:
+                  number: 8080
