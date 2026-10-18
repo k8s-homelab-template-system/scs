@@ -1,5 +1,4 @@
 # Không đóng gói vào umbrella chart scs.
 .git/
 .github/
-infra/
 README.md

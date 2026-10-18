@@ -1,7 +1,7 @@
 global:
   # Domain gốc dùng chung cho Ingress của mọi component: host = <subdomain>.<baseDomain>.
   # Ingress dùng ingressClassName: cloudflare-tunnel để tự có route + DNS trên Cloudflare
-  # (controller ở infra/cloudflare-tunnel-ingress-controller).
+  # (Cloudflare Tunnel Ingress Controller, tunnel k3s-home, xem README).
   baseDomain: vodka.bid
 
 postgres-db:

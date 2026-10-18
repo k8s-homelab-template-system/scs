@@ -16,20 +16,11 @@ Ghi đè cấu hình trong [values.yaml](values.yaml) theo dạng `<component>.<
 
 ## Public qua Cloudflare Tunnel
 
-[Cloudflare Tunnel Ingress Controller](https://github.com/STRRL/cloudflare-tunnel-ingress-controller) chạy ở bundle Fleet riêng [infra/cloudflare-tunnel-ingress-controller](infra/cloudflare-tunnel-ingress-controller/fleet.yaml). Mỗi Ingress có `ingressClassName: cloudflare-tunnel` được controller tự thêm route vào tunnel và tự tạo DNS CNAME, không cần khai báo gì trên Cloudflare. Traffic đi thẳng từ tunnel vào Service, Cloudflare lo TLS (Universal SSL chỉ phủ 1 cấp subdomain).
+Cluster đã có sẵn [Cloudflare Tunnel Ingress Controller](https://github.com/STRRL/cloudflare-tunnel-ingress-controller) 0.1.0 (cài bằng Helm tay, namespace `cloudflare-tunnel-ingress-controller`, credential trong Secret `cloudflare-api`), dùng một tunnel `k3s-home` cho mọi subdomain, kể cả `rancher.vodka.bid`.
 
-Cài lần đầu: tạo API token tại Cloudflare → My Profile → API Tokens với quyền `Zone:Zone:Read`, `Zone:DNS:Edit`, `Account:Cloudflare Tunnel:Edit`, rồi tạo Secret (không commit):
+Mỗi Ingress có `ingressClassName: cloudflare-tunnel` được controller tự thêm route vào tunnel và tự tạo DNS CNAME, không cần khai báo gì trên Cloudflare. Traffic đi thẳng từ tunnel vào Service, Cloudflare lo TLS (Universal SSL chỉ phủ 1 cấp subdomain).
 
-```bash
-kubectl create namespace cloudflare-tunnel-ingress-controller
-read -s CF_API_TOKEN
-kubectl -n cloudflare-tunnel-ingress-controller create secret generic cloudflare-api \
-  --from-literal=api-token="$CF_API_TOKEN" \
-  --from-literal=cloudflare-account-id=<account-id> \
-  --from-literal=cloudflare-tunnel-name=homelab
-```
-
-Tunnel `homelab` được controller tự tạo nếu chưa có.
+Controller ghi đè toàn bộ route của tunnel bằng các Ingress trong cluster: hostname thêm tay trên Cloudflare dashboard sẽ bị xóa, hãy khai báo bằng Ingress.
 
 ## Luồng CD
 
