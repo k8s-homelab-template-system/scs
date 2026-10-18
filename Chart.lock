@@ -1,6 +1,6 @@
 dependencies:
 - name: postgres-db
   repository: oci://ghcr.io/k8s-homelab-template-system/charts
-  version: 0.2.4
-digest: sha256:80e252a3238d3058e2febfea1147c0d9aba2028f88cffb601a5b2de66a5acafe
-generated: "2026-10-18T05:19:22.74963118Z"
+  version: 0.3.0
+digest: sha256:e4a36ff1d4b37c9fca16b4fc20b442089ea97b6ed1fbfe9467a5c337599e6baf
+generated: "2026-10-18T05:36:20.48345601Z"
