@@ -1,0 +1,11 @@
+# Infisical Secrets Operator: sync secret từ Infisical về Kubernetes Secret (CRD InfisicalSecret).
+# Nói chuyện với Infisical trong cluster, không đi qua internet.
+defaultNamespace: infisical-operator-system
+
+helm:
+  releaseName: infisical-operator
+  repo: https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts/
+  chart: secrets-operator
+  version: 0.11.12
+  values:
+    hostAPI: http://infisical.infisical.svc.cluster.local:8080/api

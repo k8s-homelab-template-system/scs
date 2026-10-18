@@ -1,0 +1,7 @@
+# Infisical self-host (quản lý secret). Bundle Fleet riêng, chart ở thư mục này.
+# Credential của chính Infisical (key mã hoá, DB, Redis) không thể nằm trong Infisical:
+# chart tự sinh vào Secret infisical-secrets (templates/secret.yaml), không có gì trong git.
+defaultNamespace: infisical
+
+helm:
+  releaseName: infisical

@@ -1,0 +1,19 @@
+apiVersion: v2
+name: infisical
+description: Infisical self-host cho homelab (infisical-standalone + PostgreSQL + Redis riêng)
+type: application
+version: 0.1.0
+appVersion: "v0.158.0"
+
+dependencies:
+  # https://infisical.com/docs/self-hosting/deployment-options/kubernetes-helm
+  # PostgreSQL/Redis/ingress-nginx đi kèm chart này đều tắt (bản bitnami cũ, mật khẩu nằm trong values).
+  - name: infisical-standalone
+    version: 1.11.0
+    repository: https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts/
+  - name: postgresql
+    version: 18.12.4
+    repository: oci://registry-1.docker.io/bitnamicharts
+  - name: redis
+    version: 28.3.1
+    repository: oci://registry-1.docker.io/bitnamicharts

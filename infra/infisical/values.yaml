@@ -1,0 +1,72 @@
+# Domain public: infisical.vodka.bid, qua Cloudflare Tunnel (tunnel k3s-home, IngressClass cloudflare-tunnel).
+infisical-standalone:
+  infisical:
+    fullnameOverride: infisical
+    replicaCount: 1
+    # ENCRYPTION_KEY, AUTH_SECRET, DB_CONNECTION_URI, REDIS_URL (templates/secret.yaml).
+    kubeSecretRef: infisical-secrets
+    extraEnv:
+      - name: SITE_URL
+        value: https://infisical.vodka.bid
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+  ingress:
+    enabled: true
+    hostName: infisical.vodka.bid
+    ingressClassName: cloudflare-tunnel
+    nginx:
+      enabled: false
+  postgresql:
+    enabled: false
+  redis:
+    enabled: false
+
+# bitnami/postgresql, Service infisical-postgresql:5432.
+postgresql:
+  fullnameOverride: infisical-postgresql
+  architecture: standalone
+  auth:
+    username: infisical
+    database: infisical
+    existingSecret: infisical-secrets
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+    # Không ghi mật khẩu vào đây: đọc từ Secret đang có lúc deploy (tránh PASSWORDS ERROR khi upgrade).
+    password: '{{ include "homelab.infisical.storedCredential" (dict "key" "password" "context" .) }}'
+  primary:
+    persistence:
+      size: 5Gi
+      storageClass: ""
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        memory: 512Mi
+
+# bitnami/redis, Service infisical-redis-master:6379.
+redis:
+  fullnameOverride: infisical-redis
+  architecture: standalone
+  auth:
+    enabled: true
+    sentinel: false
+    existingSecret: infisical-secrets
+    existingSecretPasswordKey: redis-password
+    # Không ghi mật khẩu vào đây: đọc từ Secret đang có lúc deploy.
+    password: '{{ include "homelab.infisical.storedCredential" (dict "key" "redis-password" "context" .) }}'
+  master:
+    persistence:
+      size: 1Gi
+      storageClass: ""
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 256Mi

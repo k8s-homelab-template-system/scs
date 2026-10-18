@@ -24,6 +24,23 @@ Mỗi Ingress có `ingressClassName: cloudflare-tunnel` được controller tự
 
 Controller ghi đè toàn bộ route của tunnel bằng các Ingress trong cluster: hostname thêm tay trên Cloudflare dashboard sẽ bị xóa, hãy khai báo bằng Ingress.
 
+## Quản lý secret bằng Infisical
+
+Infisical self-host chạy trong cluster, gồm 2 bundle Fleet trong [infra/](infra):
+
+| Bundle | Namespace | Nội dung |
+| --- | --- | --- |
+| [infra/infisical](infra/infisical) | `infisical` | `infisical-standalone` 1.11.0 (Infisical v0.158.0) + PostgreSQL + Redis riêng, public tại https://infisical.vodka.bid |
+| [infra/infisical-operator](infra/infisical-operator/fleet.yaml) | `infisical-operator-system` | Infisical Secrets Operator 0.11.12, sync secret từ Infisical về Kubernetes Secret (CRD `InfisicalSecret`) |
+
+Credential của chính Infisical (`ENCRYPTION_KEY`, `AUTH_SECRET`, mật khẩu PostgreSQL/Redis) không thể nằm trong Infisical, nên chart tự sinh vào Secret `infisical/infisical-secrets` (giữ nguyên khi upgrade, không bị xoá khi gỡ release). **`ENCRYPTION_KEY` mã hoá toàn bộ secret trong DB, mất là mất dữ liệu: hãy backup Secret này** ra nơi an toàn ngoài cluster:
+
+```bash
+kubectl -n infisical get secret infisical-secrets -o yaml > infisical-secrets.backup.yaml
+```
+
+Sau khi Infisical chạy: vào https://infisical.vodka.bid tạo tài khoản admin đầu tiên, tạo project và machine identity (Universal Auth) cho operator, rồi khai báo `InfisicalSecret` để sync secret về cluster.
+
 ## Luồng CD
 
 1. Push `components/<name>` → workflow `helm-release` publish chart lên ghcr.io (private) và sửa `version` của dependency trong [Chart.yaml](Chart.yaml).
