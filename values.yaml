@@ -8,10 +8,11 @@ postgres-db:
 
 rabbitmq:
   enabled: true
-  # Ghi đè values của components/rabbitmq ở đây, ví dụ:
-  # rabbitmq:
-  #   persistence:
-  #     size: 5Gi
-  #   ingress:            # mở management UI
-  #     enabled: true
-  #     hostname: rabbitmq.homelab.local
+  rabbitmq:
+    # Management UI qua Cloudflare Tunnel: public hostname rabbitmq-mgm.<domain>
+    # trỏ về http://traefik.kube-system.svc.cluster.local:80. Cloudflare lo TLS,
+    # nên Ingress chỉ cần HTTP. Đổi example.com thành domain thật.
+    ingress:
+      enabled: true
+      hostname: rabbitmq-mgm.example.com
+      tls: false
