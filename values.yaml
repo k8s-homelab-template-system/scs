@@ -5,3 +5,13 @@ postgres-db:
   #   primary:
   #     persistence:
   #       size: 20Gi
+
+rabbitmq:
+  enabled: true
+  # Ghi đè values của components/rabbitmq ở đây, ví dụ:
+  # rabbitmq:
+  #   persistence:
+  #     size: 5Gi
+  #   ingress:            # mở management UI
+  #     enabled: true
+  #     hostname: rabbitmq.homelab.local
