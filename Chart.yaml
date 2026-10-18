@@ -1,0 +1,14 @@
+apiVersion: v2
+name: scs
+description: Umbrella chart gom các component của k8s-homelab-template-system
+type: application
+version: 0.3.0
+
+# Chart con được publish từ repo components/<name> lên ghcr.io (private).
+# Workflow vendor-charts tải chúng về charts/ và commit lại, Fleet không tự tải
+# (Fleet không dùng helmSecretName cho bước helm dependency update).
+dependencies:
+  - name: postgres-db
+    version: 0.2.3
+    repository: oci://ghcr.io/k8s-homelab-template-system/charts
+    condition: postgres-db.enabled

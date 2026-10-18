@@ -1,0 +1,6 @@
+defaultNamespace: homelab
+
+helm:
+  releaseName: scs
+  # Dùng charts/*.tgz đã commit; ghcr.io private nên Fleet không tự tải được.
+  disableDependencyUpdate: true
