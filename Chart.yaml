@@ -8,6 +8,6 @@ version: 0.3.0
 # (Fleet không dùng helmSecretName cho bước helm dependency update).
 dependencies:
   - name: postgres-db
-    version: 0.3.0
+    version: 0.3.1
     repository: oci://ghcr.io/k8s-homelab-template-system/charts
     condition: postgres-db.enabled
