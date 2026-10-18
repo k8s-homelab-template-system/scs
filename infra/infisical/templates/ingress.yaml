@@ -11,6 +11,10 @@ metadata:
     app.kubernetes.io/name: infisical
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    # cloudflared đổi POST thân rỗng (vd. /api/v1/auth/token) thành chunked không có Content-Type,
+    # Infisical (Fastify) trả 500 "Unsupported Media Type" làm không đăng nhập được.
+    cloudflare-tunnel-ingress-controller.strrl.dev/disable-chunked-encoding: "true"
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
