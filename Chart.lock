@@ -4,9 +4,9 @@ dependencies:
   version: 0.3.1
 - name: rabbitmq
   repository: oci://ghcr.io/k8s-homelab-template-system/charts
-  version: 0.1.1
+  version: 0.1.2
 - name: mongo-db
   repository: oci://ghcr.io/k8s-homelab-template-system/charts
   version: 0.1.0
-digest: sha256:a9bfef621869ba3596d3896d7463ecd16ae249ce597f412c9dfed7e7acd6d071
-generated: "2026-10-18T13:35:36.701716019Z"
+digest: sha256:27319dbe4addaabbf2c25e7463aaf337f5b08292df704d50e27640c8c31522ff
+generated: "2026-10-25T14:24:28.474070618Z"
